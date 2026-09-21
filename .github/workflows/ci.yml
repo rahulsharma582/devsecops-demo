@@ -38,3 +38,13 @@ jobs:
 
       - name: Generate SBOM
         run: npx cyclonedx-npm --output-file sbom.json
+     
+      - name: Build Docker image
+        run: docker build -t devsecops-demo:${{ github.sha }} .
+
+      - name: Container Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: devsecops-demo:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          exit-code: '1'
