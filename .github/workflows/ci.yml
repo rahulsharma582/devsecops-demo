@@ -27,3 +27,14 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: SCA - Dependency Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Generate SBOM
+        run: npx cyclonedx-npm --output-file sbom.json
